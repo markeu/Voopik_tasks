@@ -10,7 +10,7 @@ export class Datastore {
   database: lowdb.LowdbSync<Schema>;
 
   constructor() {
-    const adapter = new FileSync('./src//app/data/db.json');
+    const adapter = new FileSync('./src/db/db.json');
     this.database = lowdb(adapter);
     this.database.defaults(defaultData).write();
   }

@@ -9,34 +9,34 @@ import { UserEntity } from './auth.entity';
 export class UsersRepository {
   constructor(private datastore: Datastore) {}
 
-  async getList(params: any = {}) {
-    let db = this.datastore.db.get('characters');
-    if (params.sort) {
-      db = db.sortBy(params.sort);
-    } else {
-      db = db.sortBy(['clan', 'name']);
-    }
+//   async getList(params: any = {}) {
+//     let db = this.datastore.db.get('characters');
+//     if (params.sort) {
+//       db = db.sortBy(params.sort);
+//     } else {
+//       db = db.sortBy(['clan', 'name']);
+//     }
 
-    if (params.page && params.pageSize) {
-      db = db.slice((params.page - 1) * params.pageSize).take(params.pageSize);
-    }
+//     if (params.page && params.pageSize) {
+//       db = db.slice((params.page - 1) * params.pageSize).take(params.pageSize);
+//     }
 
-    return await db.value().map(x => {
-      const entity = plainToClass(CharacterEntity, x, {
-        ignoreDecorators: true
-      });
-      return entity;
-    });
-  }
+//     return await db.value().map(x => {
+//       const entity = plainToClass(CharacterEntity, x, {
+//         ignoreDecorators: true
+//       });
+//       return entity;
+//     });
+//   }
 
-  async get(id: string) {
+  async get(username: string) {
     const dbRecord = await this.datastore.database
-      .get('characters')
-      .find(x => x.id === id)
+      .get('users')
+      .find(x => x.username === username)
       .value();
     if (dbRecord) {
       dbRecord.createdAt = new Date(dbRecord.createdAt);
-      return plainToClass(CharacterEntity, dbRecord, {
+      return plainToClass(UserEntity, dbRecord, {
         ignoreDecorators: true
       });
     }
@@ -62,12 +62,12 @@ export class UsersRepository {
     return await user;
   }
 
-  async delete(id: string) {
-    this.datastore.database
-      .get('users')
-      .remove({ username })
-      .write();
-  }
+//   async delete(id: string) {
+//     this.datastore.database
+//       .get('users')
+//       .remove({ username })
+//       .write();
+//   }
 
   private validate(user: UserEntity) {
     if (!user.username) {
